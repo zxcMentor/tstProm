@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus/prometheus.yaml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - app
+    networks:
+      - mynetwork
+
+  grafana:
+    image: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - mynetwork
+networks:
+  mynetwork:
